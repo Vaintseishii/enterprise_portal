@@ -15,6 +15,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Organization {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  users     User[]
+  projects  Project[]
+}
+
 model Post {
   id        Int      @id @default(autoincrement())
   name      String
@@ -25,6 +34,29 @@ model Post {
   createdById String
 
   @@index([name])
+}
+
+model Project {
+  id           String       @id @default(cuid())
+  title        String
+  description  String?
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  tasks        Task[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Task {
+  id             String   @id @default(cuid())
+  title          String
+  status         String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  projectId      String
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignedUserId String?
+  assignedTo     User?    @relation(fields: [assignedUserId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 // Necessary for Next auth
@@ -64,6 +96,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
+
+  orgId        String?
+  organization Organization? @relation(fields: [orgId], references: [id])
+  tasks        Task[]
 }
 
 model VerificationToken {
