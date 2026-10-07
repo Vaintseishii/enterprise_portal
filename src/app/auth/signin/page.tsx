@@ -1,6 +1,46 @@
+"use client"
+
 import Link from "next/link";
+import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { signIn } from "next-auth/react"
 
 export default function SignInPage() {
+    const router = useRouter();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+
+    const handleSubmit = async (e: React.SubmitEvent) => {
+        e.preventDefault();
+        setError("");
+        setIsLoading(true);
+
+        try {
+            // Call NextAuth credentials provider
+            const result = await signIn("credentials", {
+                email,
+                password,
+                redirect: false, //prevent automatic hard page reload to handle errors gracefully
+            })
+
+            if (result?.error) {
+                setError("Invalid email or password. Please check your credentials.")
+            } else {
+                router.push("/projects");
+                router.refresh() // to recognize the new session
+            }
+        } catch (err) {
+            setError("An unexpected error has occurred during sign in.");
+        } finally {
+            setIsLoading(false);
+        }
+
+    }
+
+
     return (
         <main className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
             <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-sm border border-gray-200">
@@ -23,7 +63,7 @@ export default function SignInPage() {
                             placeholder="xanthreign@enterprise.com"/>
                     </div>
                     <div>
-                        <label className="block text-sm font font-medium text-gray-700 mb-1">Password/label>
+                        <label className="block text-sm font font-medium text-gray-700 mb-1">Password</label>
                         <input
                             type="password"
                             value={password}
