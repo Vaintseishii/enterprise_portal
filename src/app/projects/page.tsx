@@ -8,7 +8,7 @@ export default function ProjectsDashboard() {
     
     if (isLoading) return <div className="p-8 text-gray-500">Patience...</div>;
 
-    <div className="space-y-4">
+    return <div className="space-y-4">
         {projects?.map((project) => (
             <div key={project.id} className="border p-4 rounded shadow-sm bg-white">
                 <h2 className="font-semibold text-lg">{project.title}</h2>
