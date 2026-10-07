@@ -11,7 +11,7 @@ export default function SignInPage() {
                     <div className="mb-4 p-3 bg-red-50 text-red-600  text-sm rounded-lg border border-red-200"></div>
                 )}
 
-                <form onSubmit={} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-sm font font-medium text-gray-700 mb-1">Email Address</label>
                         <input
