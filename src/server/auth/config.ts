@@ -80,10 +80,9 @@ export const authConfig = {
   },
   adapter: PrismaAdapter(db),
   pages: {
-    signIn: "/auth/signin"
+    signIn: "/auth/signIn"
   },
   callbacks: {
-    authorized: ({ auth }) => !!auth,
     session: ({ session, token }) => ({
       ...session,
       user: {
