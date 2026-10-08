@@ -1,8 +1,8 @@
 import { z } from 'zod'; 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const projectRouter = createTRPCRouter({
-    create: publicProcedure
+    create: protectedProcedure
         .input(
             z.object({
                 title: z.string().min(1, "Project title is required"),
@@ -23,7 +23,7 @@ export const projectRouter = createTRPCRouter({
                 }
             })
         }),
-    getAll: publicProcedure
+    getAll: protectedProcedure
         .query( async({ ctx }) => {
             return ctx.db.project.findMany({
                 include: {tasks: true}
